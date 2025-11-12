@@ -12,7 +12,11 @@
 local add, later, now = MiniDeps.add, MiniDeps.later, MiniDeps.now
 local now_if_args = _G.Config.now_if_args
 
--- flash ================================================================
+-- git ================================================================
+-- later(function()
+-- 	add({ source = "NeogitOrg/neogit", depends = { "nvim-lua/plenary.nvim" } })
+-- end)
+
 later(function()
 	add({ source = "tpope/vim-fugitive" })
 end)
