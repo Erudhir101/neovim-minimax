@@ -56,6 +56,7 @@ local now_if_args = _G.Config.now_if_args
 -- - `:h MiniBasics.config.options` - list of adjusted options
 -- - `:h MiniBasics.config.mappings` - list of created mappings
 -- - `:h MiniBasics.config.autocommands` - list of created autocommands
+
 now(function()
 	require("mini.basics").setup({
 		-- Manage options in 'plugin/10_options.lua' for didactic purposes
@@ -388,43 +389,43 @@ end)
 --
 -- It also works with snippet candidates provided by LSP server. Best experience
 -- when paired with 'mini.snippets' (which is set up in this file).
-later(function()
-	-- Customize post-processing of LSP responses for a better user experience.
-	-- Don't show 'Text' suggestions (usually noisy) and show snippets last.
-	local process_items_opts = {
-		kind_priority = {
-			Text = -1,
-			Snippet = 99,
-			Variable = 90,
-			Field = 90,
-			Function = 80,
-			Method = 80,
-		},
-	}
-	local process_items = function(items, base)
-		return MiniCompletion.default_process_items(items, base, process_items_opts)
-	end
-	require("mini.completion").setup({
-		lsp_completion = {
-			-- Without this config autocompletion is set up through `:h 'completefunc'`.
-			-- Although not needed, setting up through `:h 'omnifunc'` is cleaner
-			-- (sets up only when needed) and makes it possible to use `<C-u>`.
-			source_func = "omnifunc",
-			auto_setup = false,
-			process_items = process_items,
-		},
-	})
-
-	-- Set 'omnifunc' for LSP completion only when needed.
-	local on_attach = function(ev)
-		vim.bo[ev.buf].omnifunc = "v:lua.MiniCompletion.completefunc_lsp"
-	end
-	_G.Config.new_autocmd("LspAttach", nil, on_attach, "Set 'omnifunc'")
-
-	-- Advertise to servers that Neovim now supports certain set of completion and
-	-- signature features through 'mini.completion'.
-	vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })
-end)
+-- later(function()
+-- 	-- Customize post-processing of LSP responses for a better user experience.
+-- 	-- Don't show 'Text' suggestions (usually noisy) and show snippets last.
+-- 	local process_items_opts = {
+-- 		kind_priority = {
+-- 			Text = -1,
+-- 			Snippet = 99,
+-- 			Variable = 90,
+-- 			Field = 90,
+-- 			Function = 80,
+-- 			Method = 80,
+-- 		},
+-- 	}
+-- 	local process_items = function(items, base)
+-- 		return MiniCompletion.default_process_items(items, base, process_items_opts)
+-- 	end
+-- 	require("mini.completion").setup({
+-- 		lsp_completion = {
+-- 			-- Without this config autocompletion is set up through `:h 'completefunc'`.
+-- 			-- Although not needed, setting up through `:h 'omnifunc'` is cleaner
+-- 			-- (sets up only when needed) and makes it possible to use `<C-u>`.
+-- 			source_func = "omnifunc",
+-- 			auto_setup = false,
+-- 			process_items = process_items,
+-- 		},
+-- 	})
+--
+-- 	-- Set 'omnifunc' for LSP completion only when needed.
+-- 	local on_attach = function(ev)
+-- 		vim.bo[ev.buf].omnifunc = "v:lua.MiniCompletion.completefunc_lsp"
+-- 	end
+-- 	_G.Config.new_autocmd("LspAttach", nil, on_attach, "Set 'omnifunc'")
+--
+-- 	-- Advertise to servers that Neovim now supports certain set of completion and
+-- 	-- signature features through 'mini.completion'.
+-- 	vim.lsp.config("*", { capabilities = MiniCompletion.get_lsp_capabilities() })
+-- end)
 
 -- Autohighlight word under cursor with a customizable delay.
 -- Word boundaries are defined based on `:h 'iskeyword'` option.
@@ -432,6 +433,12 @@ end)
 -- It is not enabled by default because its effects are a matter of taste.
 -- Uncomment next line (use `gcc`) to enable.
 later(function()
+	_G.cursorword_blocklist = function()
+		local curword = vim.fn.expand("<cword>")
+		local blocklist = { "--", "__", "//" }
+		vim.b.minicursorword_disable = vim.tbl_contains(blocklist, curword)
+	end
+	vim.cmd("au CursorMoved * lua _G.cursorword_blocklist()")
 	require("mini.cursorword").setup()
 end)
 
@@ -570,7 +577,9 @@ end)
 --
 -- See also:
 -- - `:h MiniJump2d.gen_spotter` - list of available spotters
--- later(function() require('mini.jump2d').setup() end)
+-- later(function()
+-- 	require("mini.jump2d").setup()
+-- end)
 
 -- Special key mappings. Provides helpers to map:
 -- - Multi-step actions. Apply action 1 if condition is met; else apply
