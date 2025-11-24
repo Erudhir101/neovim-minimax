@@ -12,13 +12,12 @@
 local add, later, now = MiniDeps.add, MiniDeps.later, MiniDeps.now
 local now_if_args = _G.Config.now_if_args
 
--- git ================================================================
--- later(function()
--- 	add({ source = "NeogitOrg/neogit", depends = { "nvim-lua/plenary.nvim" } })
--- end)
+-- folke ================================================================
 
 later(function()
-	add({ source = "tpope/vim-fugitive" })
+	add({ source = "ibhagwan/fzf-lua" })
+	local fzf = require("fzf-lua")
+	fzf.setup()
 end)
 
 -- grug-far ================================================================
@@ -48,7 +47,7 @@ later(function()
 		},
 	})
 
-	vim.keymap.set({ "n", "x", "o" }, "<CR>", function()
+	vim.keymap.set({ "n", "x", "o" }, ";f", function()
 		flash.jump()
 	end, { desc = "flash Jump" })
 	vim.keymap.set({ "n", "x", "o" }, ";s", function()
