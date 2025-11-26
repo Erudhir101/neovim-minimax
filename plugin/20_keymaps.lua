@@ -10,12 +10,14 @@
 
 -- An example helper to create a Normal mode mapping
 local nmap = function(lhs, rhs, desc)
-	-- See `:h vim.keymap.set()`
-	vim.keymap.set("n", lhs, rhs, { desc = desc })
+  -- See `:h vim.keymap.set()`
+  vim.keymap.set("n", lhs, rhs, { desc = desc })
 end
 
-nmap("<C-d>", "<C-d>zz")
-nmap("<C-u>", "<C-u>zz")
+nmap("<C-d>", "<C-d>zz", 'Half page down')
+nmap("<C-u>", "<C-u>zz", 'Half page up')
+nmap("n", "nzzzv", "Next search result(centered)")
+nmap("N", "Nzzzv", "Previous search result(centered)")
 
 -- Paste linewise before/after current line
 -- Usage: `yiw` to yank a word and `]p` to put it on the next line.
@@ -87,9 +89,9 @@ local explore_quickfix = function()
   vim.cmd('copen')
 end
 
-nmap_leader('e', '<Cmd>lua if not MiniFiles.close() then MiniFiles.open() end<CR>',          'Directory')
-nmap_leader('Ef', explore_at_file,                          'File directory')
-nmap_leader('Ei', '<Cmd>edit $MYVIMRC<CR>',                 'init.lua')
+nmap_leader('e', '<Cmd>lua if not MiniFiles.close() then MiniFiles.open() end<CR>', 'Directory')
+nmap_leader('Ef', explore_at_file, 'File directory')
+nmap_leader('Ei', '<Cmd>edit $MYVIMRC<CR>', 'init.lua')
 nmap_leader('En', '<Cmd>lua MiniNotify.show_history()<CR>', 'Notifications')
 
 -- f is for 'Fuzzy Find'. Common usage:
@@ -102,26 +104,26 @@ nmap_leader('En', '<Cmd>lua MiniNotify.show_history()<CR>', 'Notifications')
 -- All these use 'mini.pick'. See `:h MiniPick-overview` for an overview.
 -- local pick_added_hunks_buf = '<Cmd>Pick git_hunks path="%" scope="staged"<CR>'
 
-nmap_leader('ff', '<Cmd>FzfLua files<CR>',                   'Files')
-nmap_leader('fg', '<Cmd>FzfLua live_grep<CR>',               'Grep')
-nmap_leader('fG', '<Cmd>FzfLua grep_cword<CR>',              'Grep current word')
-nmap_leader('fh', '<Cmd>FzfLua helptags<CR>',                'Help')
-nmap_leader('fH', '<Cmd>FzfLua manpages<CR>',                'all Manuals')
-nmap_leader('fb', '<Cmd>FzfLua buffers<CR>',                 'Buffers')
-nmap_leader('f:', '<Cmd>FzfLua command_history<CR>',         'Command History')
-nmap_leader('f/', '<Cmd>FzfLua search_history<CR>',          'Search History')
-nmap_leader('fd', '<Cmd>FzfLua diagnostics_document<CR>',    'Diagnostics')
-nmap_leader('fD', '<Cmd>FzfLua diagnostics_workspace<CR>',   'Buffer Diagnostics')
-nmap_leader('fs', '<Cmd>FzfLua lsp_document_symbols<CR>',    'Document Symbols')
-nmap_leader('fS', '<Cmd>FzfLua lsp_workspace_symbols<CR>',   'Workspace Symbols')
-nmap_leader('fk', '<Cmd>FzfLua keymaps<CR>',                 'Keymaps')
-nmap_leader('fm', '<Cmd>FzfLua marks<CR>',                   'Marks')
-nmap_leader('fj', '<Cmd>FzfLua jumps<CR>',                   'Jumps')
-nmap_leader('fr', '<Cmd>FzfLua resume<CR>',                  'Resume')
-nmap_leader('fZ', '<Cmd>FzfLua spellcheck<CR>',              'Spelling')
-nmap_leader('fz', '<Cmd>FzfLua spell_suggest<CR>',           'Spell Suggest')
+nmap_leader('ff', '<Cmd>FzfLua files<CR>', 'Files')
+nmap_leader('fg', '<Cmd>FzfLua live_grep<CR>', 'Grep')
+nmap_leader('fG', '<Cmd>FzfLua grep_cword<CR>', 'Grep current word')
+nmap_leader('fh', '<Cmd>FzfLua helptags<CR>', 'Help')
+nmap_leader('fH', '<Cmd>FzfLua manpages<CR>', 'all Manuals')
+nmap_leader('fb', '<Cmd>FzfLua buffers<CR>', 'Buffers')
+nmap_leader('f:', '<Cmd>FzfLua command_history<CR>', 'Command History')
+nmap_leader('f/', '<Cmd>FzfLua search_history<CR>', 'Search History')
+nmap_leader('fd', '<Cmd>FzfLua diagnostics_document<CR>', 'Diagnostics')
+nmap_leader('fD', '<Cmd>FzfLua diagnostics_workspace<CR>', 'Buffer Diagnostics')
+nmap_leader('fs', '<Cmd>FzfLua lsp_document_symbols<CR>', 'Document Symbols')
+nmap_leader('fS', '<Cmd>FzfLua lsp_workspace_symbols<CR>', 'Workspace Symbols')
+nmap_leader('fk', '<Cmd>FzfLua keymaps<CR>', 'Keymaps')
+nmap_leader('fm', '<Cmd>FzfLua marks<CR>', 'Marks')
+nmap_leader('fj', '<Cmd>FzfLua jumps<CR>', 'Jumps')
+nmap_leader('fr', '<Cmd>FzfLua resume<CR>', 'Resume')
+nmap_leader('fZ', '<Cmd>FzfLua spellcheck<CR>', 'Spelling')
+nmap_leader('fz', '<Cmd>FzfLua spell_suggest<CR>', 'Spell Suggest')
 
-nmap_leader('fq', explore_quickfix,                             'Quickfix')
+nmap_leader('fq', explore_quickfix, 'Quickfix')
 
 -- l is for 'Language'. Common usage:
 -- - `<Leader>ld` - show more diagnostic details in a floating window
@@ -133,24 +135,24 @@ nmap_leader('fq', explore_quickfix,                             'Quickfix')
 -- by an "replace" operator in 'mini.operators' (which is more commonly used).
 local formatting_cmd = '<Cmd>lua require("conform").format({lsp_fallback = true, async = true, timeout_ms = 1000})<CR>'
 
-nmap_leader('la', '<Cmd>lua vim.lsp.buf.code_action()<CR>',     'Actions')
-nmap_leader('ld', '<Cmd>lua vim.diagnostic.open_float()<CR>',   'Diagnostic popup')
-vim.keymap.set({"n", "v"},'<leader>lf', formatting_cmd,         {desc = "Format"})
-nmap_leader('li', '<Cmd>lua vim.lsp.buf.implementation()<CR>',  'Implementation')
-nmap_leader('K',  '<Cmd>lua vim.lsp.buf.hover()<CR>',           'Hover')
-nmap_leader('lr', '<Cmd>lua vim.lsp.buf.rename()<CR>',          'Rename')
-nmap_leader('lR', '<Cmd>lua vim.lsp.buf.references()<CR>',      'References')
-nmap_leader('ls', '<Cmd>lua vim.lsp.buf.definition()<CR>',      'Source definition')
+nmap_leader('la', '<Cmd>lua vim.lsp.buf.code_action()<CR>', 'Actions')
+nmap_leader('ld', '<Cmd>lua vim.diagnostic.open_float()<CR>', 'Diagnostic popup')
+vim.keymap.set({ "n", "v" }, '<leader>lf', formatting_cmd, { desc = "Format" })
+nmap_leader('li', '<Cmd>lua vim.lsp.buf.implementation()<CR>', 'Implementation')
+nmap_leader('K', '<Cmd>lua vim.lsp.buf.hover()<CR>', 'Hover')
+nmap_leader('lr', '<Cmd>lua vim.lsp.buf.rename()<CR>', 'Rename')
+nmap_leader('lR', '<Cmd>lua vim.lsp.buf.references()<CR>', 'References')
+nmap_leader('ls', '<Cmd>lua vim.lsp.buf.definition()<CR>', 'Source definition')
 nmap_leader('lt', '<Cmd>lua vim.lsp.buf.type_definition()<CR>', 'Type definition')
-nmap_leader('lh', function ()
- vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
- vim.notify(vim.lsp.inlay_hint.is_enabled() and "Inlay Hints enabled" or "Inlay Hints disabled")
+nmap_leader('lh', function()
+  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+  vim.notify(vim.lsp.inlay_hint.is_enabled() and "Inlay Hints enabled" or "Inlay Hints disabled")
 end, 'Inlay hint toggle')
 
 -- o is for 'Other'. Common usage:
 -- - `<Leader>oz` - toggle between "zoomed" and regular view of current buffer
 nmap_leader('or', '<Cmd>lua MiniMisc.resize_window()<CR>', 'Resize to default width')
-nmap_leader('ot', '<Cmd>lua MiniTrailspace.trim()<CR>',    'Trim trailspace')
+nmap_leader('ot', '<Cmd>lua MiniTrailspace.trim()<CR>', 'Trim trailspace')
 -- nmap_leader('oz', '<Cmd>lua MiniMisc.zoom()<CR>',          'Zoom toggle')
 
 -- s is for 'Session'. Common usage:
@@ -160,13 +162,9 @@ nmap_leader('ot', '<Cmd>lua MiniTrailspace.trim()<CR>',    'Trim trailspace')
 local session_new = 'MiniSessions.write(vim.fn.input("Session name: "))'
 
 nmap_leader('sd', '<Cmd>lua MiniSessions.select("delete")<CR>', 'Delete')
-nmap_leader('sn', '<Cmd>lua ' .. session_new .. '<CR>',         'New')
-nmap_leader('sr', '<Cmd>lua MiniSessions.select("read")<CR>',   'Read')
-nmap_leader('sw', '<Cmd>lua MiniSessions.write()<CR>',          'Write current')
-
--- t is for 'Terminal'
--- nmap_leader('tT', '<Cmd>horizontal term<CR>', 'Terminal (horizontal)')
--- nmap_leader('tt', '<Cmd>vertical term<CR>',   'Terminal (vertical)')
+nmap_leader('sn', '<Cmd>lua ' .. session_new .. '<CR>', 'New')
+nmap_leader('sr', '<Cmd>lua MiniSessions.select("read")<CR>', 'Read')
+nmap_leader('sw', '<Cmd>lua MiniSessions.write()<CR>', 'Write current')
 
 -- v is for 'Visits'. Common usage:
 -- - `<Leader>vv` - add    "core" label to current file.

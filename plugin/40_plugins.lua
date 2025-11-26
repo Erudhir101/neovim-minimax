@@ -15,44 +15,44 @@ local now_if_args = _G.Config.now_if_args
 -- folke ================================================================
 
 later(function()
-	add({ source = "ibhagwan/fzf-lua" })
-	local fzf = require("fzf-lua")
-	fzf.setup()
+  add({ source = "ibhagwan/fzf-lua" })
+  local fzf = require("fzf-lua")
+  fzf.setup()
 end)
 
 -- grug-far ================================================================
 
 later(function()
-	add({ source = "MagicDuck/grug-far.nvim" })
-	local grug = require("grug-far")
+  add({ source = "MagicDuck/grug-far.nvim" })
+  local grug = require("grug-far")
 
-	grug.setup({})
+  grug.setup({})
 
-	vim.keymap.set("n", "<Leader>os", function()
-		grug.open()
-	end, { desc = "grug-far open" })
+  vim.keymap.set("n", "<Leader>os", function()
+    grug.open()
+  end, { desc = "grug-far open" })
 end)
 
 -- flash ================================================================
 later(function()
-	add({ source = "folke/flash.nvim" })
-	local flash = require("flash")
+  add({ source = "folke/flash.nvim" })
+  local flash = require("flash")
 
-	flash.setup({
-		search = {
-			mode = "search",
-		},
-		char = {
-			enabled = false,
-		},
-	})
+  flash.setup({
+    search = {
+      mode = "search",
+    },
+    char = {
+      enabled = false,
+    },
+  })
 
-	vim.keymap.set({ "n", "x", "o" }, ";f", function()
-		flash.jump()
-	end, { desc = "flash Jump" })
-	vim.keymap.set({ "n", "x", "o" }, ";s", function()
-		flash.treesitter()
-	end, { desc = "flash Treesitter" })
+  vim.keymap.set({ "n", "x", "o" }, ";f", function()
+    flash.jump()
+  end, { desc = "flash Jump" })
+  vim.keymap.set({ "n", "x", "o" }, ";s", function()
+    flash.treesitter()
+  end, { desc = "flash Treesitter" })
 end)
 
 -- Tree-sitter ================================================================
@@ -72,156 +72,156 @@ end)
 --
 -- Add these plugins now if file (and not 'mini.starter') is shown after startup.
 now_if_args(function()
-	add({
-		source = "nvim-treesitter/nvim-treesitter",
-		-- Use `main` branch since `master` branch is frozen, yet still default
-		checkout = "main",
-		-- Update tree-sitter parser after plugin is updated
-		hooks = {
-			post_checkout = function()
-				vim.cmd("TSUpdate")
-			end,
-		},
-	})
-	add({
-		source = "nvim-treesitter/nvim-treesitter-textobjects",
-		-- Same logic as for 'nvim-treesitter'
-		checkout = "main",
-	})
+  add({
+    source = "nvim-treesitter/nvim-treesitter",
+    -- Use `main` branch since `master` branch is frozen, yet still default
+    checkout = "main",
+    -- Update tree-sitter parser after plugin is updated
+    hooks = {
+      post_checkout = function()
+        vim.cmd("TSUpdate")
+      end,
+    },
+  })
+  add({
+    source = "nvim-treesitter/nvim-treesitter-textobjects",
+    -- Same logic as for 'nvim-treesitter'
+    checkout = "main",
+  })
 
-	-- Define languages which will have parsers installed and auto enabled
-	local languages = {
-		-- These are already pre-installed with Neovim. Used as an example.
-		"bash",
-		"c",
-		"cpp",
-		"css",
-		"dockerfile",
-		"gitignore",
-		"go",
-		"html",
-		"java",
-		"javascript",
-		"json",
-		"lua",
-		"markdown",
-		"markdown_inline",
-		"prisma",
-		"python",
-		"rust",
-		"svelte",
-		"tsx",
-		"typescript",
-		"vim",
-		"vimdoc",
-		"yaml",
-		-- Add here more languages with which you want to use tree-sitter
-		-- To see available languages:
-		-- - Execute `:=require('nvim-treesitter').get_available()`
-		-- - Visit 'SUPPORTED_LANGUAGES.md' file at
-		--   https://github.com/nvim-treesitter/nvim-treesitter/blob/main
-	}
-	local isnt_installed = function(lang)
-		return #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".*", false) == 0
-	end
-	local to_install = vim.tbl_filter(isnt_installed, languages)
-	if #to_install > 0 then
-		require("nvim-treesitter").install(to_install)
-	end
+  -- Define languages which will have parsers installed and auto enabled
+  local languages = {
+    -- These are already pre-installed with Neovim. Used as an example.
+    "bash",
+    "c",
+    "cpp",
+    "css",
+    "dockerfile",
+    "gitignore",
+    "go",
+    "html",
+    "java",
+    "javascript",
+    "json",
+    "lua",
+    "markdown",
+    "markdown_inline",
+    "prisma",
+    "python",
+    "rust",
+    "svelte",
+    "tsx",
+    "typescript",
+    "vim",
+    "vimdoc",
+    "yaml",
+    -- Add here more languages with which you want to use tree-sitter
+    -- To see available languages:
+    -- - Execute `:=require('nvim-treesitter').get_available()`
+    -- - Visit 'SUPPORTED_LANGUAGES.md' file at
+    --   https://github.com/nvim-treesitter/nvim-treesitter/blob/main
+  }
+  local isnt_installed = function(lang)
+    return #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".*", false) == 0
+  end
+  local to_install = vim.tbl_filter(isnt_installed, languages)
+  if #to_install > 0 then
+    require("nvim-treesitter").install(to_install)
+  end
 
-	-- Enable tree-sitter after opening a file for a target language
-	local filetypes = {}
-	for _, lang in ipairs(languages) do
-		for _, ft in ipairs(vim.treesitter.language.get_filetypes(lang)) do
-			table.insert(filetypes, ft)
-		end
-	end
-	local ts_start = function(ev)
-		vim.treesitter.start(ev.buf)
-	end
-	_G.Config.new_autocmd("FileType", filetypes, ts_start, "Start tree-sitter")
+  -- Enable tree-sitter after opening a file for a target language
+  local filetypes = {}
+  for _, lang in ipairs(languages) do
+    for _, ft in ipairs(vim.treesitter.language.get_filetypes(lang)) do
+      table.insert(filetypes, ft)
+    end
+  end
+  local ts_start = function(ev)
+    vim.treesitter.start(ev.buf)
+  end
+  _G.Config.new_autocmd("FileType", filetypes, ts_start, "Start tree-sitter")
 end)
 
 -- Completion ===========================================================
 
 local function build_blink(params)
-	vim.notify("Building blink.cmp", vim.log.levels.INFO)
-	local obj = vim.system({ "cargo", "build", "--release" }, { cwd = params.path }):wait()
-	if obj.code == 0 then
-		vim.notify("Building blink.cmp done", vim.log.levels.INFO)
-	else
-		vim.notify("Building blink.cmp failed", vim.log.levels.ERROR)
-	end
+  vim.notify("Building blink.cmp", vim.log.levels.INFO)
+  local obj = vim.system({ "cargo", "build", "--release" }, { cwd = params.path }):wait()
+  if obj.code == 0 then
+    vim.notify("Building blink.cmp done", vim.log.levels.INFO)
+  else
+    vim.notify("Building blink.cmp failed", vim.log.levels.ERROR)
+  end
 end
 
 now(function()
-	add({
-		source = "saghen/blink.cmp",
-		depends = { "rafamadriz/friendly-snippets", "echasnovski/mini.icons" },
-		-- checkout = "1.6.0",
-		hooks = {
-			post_install = build_blink,
-			post_checkout = build_blink,
-		},
-	})
-	local border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
-	require("blink.cmp").setup({
-		keymap = { preset = "default", ["<C-y>"] = { "accept", "fallback" } },
-		appearance = {
-			nerd_font_variant = "mono",
-		},
-		fuzzy = { implementation = "lua" },
-		completion = {
-			keyword = { range = "full" },
-			menu = {
-				auto_show = true,
-				border = border,
-				draw = {
-					columns = {
-						{ "kind_icon", "kind", gap = 1 },
-						{ "label", "label_description", gap = 1 },
-					},
-					components = {
-						kind_icon = {
-							text = function(ctx)
-								local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
-								return kind_icon
-							end,
-							highlight = function(ctx)
-								local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-								return hl
-							end,
-						},
-						kind = {
-							highlight = function(ctx)
-								local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-								return hl
-							end,
-						},
-					},
-				},
-			},
-			documentation = {
-				window = {
-					border = border,
-				},
-				auto_show = true,
-			},
-			trigger = {
-				show_on_keyword = true,
-			},
-		},
-		sources = {
-			default = { "lsp", "path", "snippets", "buffer" },
-		},
-	})
+  add({
+    source = "saghen/blink.cmp",
+    depends = { "rafamadriz/friendly-snippets", "echasnovski/mini.icons" },
+    -- checkout = "1.6.0",
+    hooks = {
+      post_install = build_blink,
+      post_checkout = build_blink,
+    },
+  })
+  local border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
+  require("blink.cmp").setup({
+    keymap = { preset = "default", ["<C-y>"] = { "accept", "fallback" } },
+    appearance = {
+      nerd_font_variant = "mono",
+    },
+    fuzzy = { implementation = "lua" },
+    completion = {
+      keyword = { range = "full" },
+      menu = {
+        auto_show = true,
+        border = border,
+        draw = {
+          columns = {
+            { "kind_icon", "kind",              gap = 1 },
+            { "label",     "label_description", gap = 1 },
+          },
+          components = {
+            kind_icon = {
+              text = function(ctx)
+                local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
+                return kind_icon
+              end,
+              highlight = function(ctx)
+                local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
+                return hl
+              end,
+            },
+            kind = {
+              highlight = function(ctx)
+                local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
+                return hl
+              end,
+            },
+          },
+        },
+      },
+      documentation = {
+        window = {
+          border = border,
+        },
+        auto_show = true,
+      },
+      trigger = {
+        show_on_keyword = true,
+      },
+    },
+    sources = {
+      default = { "lsp", "path", "snippets", "buffer" },
+    },
+  })
 
-	local on_attach = function(ev)
-		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
-	end
-	_G.Config.new_autocmd("LspAttach", nil, on_attach, "Set 'omnifunc'")
+  local on_attach = function(ev)
+    vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+  end
+  _G.Config.new_autocmd("LspAttach", nil, on_attach, "Set 'omnifunc'")
 
-	vim.lsp.config("*", require("blink.cmp").get_lsp_capabilities())
+  vim.lsp.config("*", require("blink.cmp").get_lsp_capabilities())
 end)
 -- Language servers ===========================================================
 
@@ -239,29 +239,30 @@ end)
 --
 -- Add it now if file (and not 'mini.starter') is shown after startup.
 now_if_args(function()
-	add("neovim/nvim-lspconfig")
+  add("neovim/nvim-lspconfig")
 
-	vim.lsp.enable({
-		"lua_ls",
-		"prettierd",
-		"stylua",
-		"svelte",
-		"tailwindcss",
-		"vtsls",
-		"eslint_d",
-	})
-	vim.diagnostic.config({ virtual_lines = false })
-	vim.lsp.config("eslint_d", {})
-	vim.lsp.config("prettierd", {})
-	vim.lsp.config("vtsls", {})
-	vim.lsp.config("tailwindcss", {})
-	-- Use `:h vim.lsp.enable()` to automatically enable language server based on
-	-- the rules provided by 'nvim-lspconfig'.
-	-- Use `:h vim.lsp.config()` or 'ftplugin/lsp/' directory to configure servers.
-	-- Uncomment and tweak the following `vim.lsp.enable()` call to enable servers.
-	-- vim.lsp.enable({
-	--   -- For example, if `lua-language-server` is installed, use `'lua_ls'` entry
-	-- })
+  vim.lsp.enable({
+    "lua_ls",
+    "prettierd",
+    "stylua",
+    "svelte",
+    "tailwindcss",
+    "vtsls",
+    "eslint_d",
+  })
+  vim.diagnostic.config({ virtual_lines = false })
+  vim.lsp.config("eslint_d", {})
+  vim.lsp.config("ts_ls", {})
+  vim.lsp.config("vtsls", {})
+  vim.lsp.config("prettierd", {})
+  vim.lsp.config("tailwindcss", {})
+  -- Use `:h vim.lsp.enable()` to automatically enable language server based on
+  -- the rules provided by 'nvim-lspconfig'.
+  -- Use `:h vim.lsp.config()` or 'ftplugin/lsp/' directory to configure servers.
+  -- Uncomment and tweak the following `vim.lsp.enable()` call to enable servers.
+  -- vim.lsp.enable({
+  --   -- For example, if `lua-language-server` is installed, use `'lua_ls'` entry
+  -- })
 end)
 
 -- Formatting =================================================================
@@ -273,74 +274,74 @@ end)
 -- The 'stevearc/conform.nvim' plugin is a good and maintained solution for easier
 -- formatting setup.
 later(function()
-	add("stevearc/conform.nvim")
-	local conform = require("conform")
+  add("stevearc/conform.nvim")
+  local conform = require("conform")
 
-	-- See also:
-	-- - `:h Conform`
-	-- - `:h conform-options`
-	-- - `:h conform-formatters`
-	local prettier = {
-		"prettierd",
-		"prettier",
-		stop_after_first = true,
-	}
-	conform.setup({
-		formatters_by_ft = {
-			javascript = prettier,
-			typescript = prettier,
-			javascriptreact = prettier,
-			typescriptreact = prettier,
-			svelte = prettier,
-			css = prettier,
-			html = prettier,
-			json = prettier,
-			jsonc = prettier,
-			yaml = prettier,
-			markdown = prettier,
-			graphql = prettier,
-			-- sql = { "sql-formatter" },
-			lua = { "stylua" },
-			-- c = { "clang-format" },
-			-- rust = { "ast_grep" },
-			-- python = { "isort", "black" },
-			-- bash = { "shfmt" },
-			-- shell = { "shfmt" },
-		},
-		format_on_save = {
-			lsp_fallback = true,
-			async = false,
-			timeout_ms = 1001,
-		},
-		formatters = {
-			astyle = {
-				command = "astyle",
-				prepend_args = { "-s3", "-c", "-J", "-n", "-q", "-z2", "-xC80" },
-			},
-			["clang-format"] = {
-				command = "clang-format",
-				prepend_args = { "--style=file", "-i" },
-			},
-			["cmake-format"] = {
-				command = "cmake-format",
-				prepend_args = { "-i" },
-			},
-			prettier = {
-				command = "prettier",
-				prepend_args = { "-w" },
-			},
-			prettierd = {
-				command = "prettierd",
-				prepend_args = { "-w" },
-			},
-			["sql-formatter"] = {
-				command = "sql-formatter",
-				prepend_args = {
-					"--language=postgresql",
-				},
-			},
-		},
-	})
+  -- See also:
+  -- - `:h Conform`
+  -- - `:h conform-options`
+  -- - `:h conform-formatters`
+  local prettier = {
+    "prettierd",
+    "prettier",
+    stop_after_first = true,
+  }
+  conform.setup({
+    formatters_by_ft = {
+      javascript = prettier,
+      typescript = prettier,
+      javascriptreact = prettier,
+      typescriptreact = prettier,
+      svelte = prettier,
+      css = prettier,
+      html = prettier,
+      json = prettier,
+      jsonc = prettier,
+      yaml = prettier,
+      markdown = prettier,
+      graphql = prettier,
+      -- sql = { "sql-formatter" },
+      lua = { "stylua" },
+      -- c = { "clang-format" },
+      -- rust = { "ast_grep" },
+      -- python = { "isort", "black" },
+      -- bash = { "shfmt" },
+      -- shell = { "shfmt" },
+    },
+    format_on_save = {
+      lsp_fallback = true,
+      async = false,
+      timeout_ms = 1001,
+    },
+    formatters = {
+      astyle = {
+        command = "astyle",
+        prepend_args = { "-s3", "-c", "-J", "-n", "-q", "-z2", "-xC80" },
+      },
+      ["clang-format"] = {
+        command = "clang-format",
+        prepend_args = { "--style=file", "-i" },
+      },
+      ["cmake-format"] = {
+        command = "cmake-format",
+        prepend_args = { "-i" },
+      },
+      prettier = {
+        command = "prettier",
+        prepend_args = { "-w" },
+      },
+      prettierd = {
+        command = "prettierd",
+        prepend_args = { "-w" },
+      },
+      ["sql-formatter"] = {
+        command = "sql-formatter",
+        prepend_args = {
+          "--language=postgresql",
+        },
+      },
+    },
+  })
 end)
 -- Snippets ===================================================================
 
@@ -352,7 +353,7 @@ end)
 -- 'mini.snippets' is designed to work with it as seamlessly as possible.
 -- See `:h MiniSnippets.gen_loader.from_lang()`.
 later(function()
-	add("rafamadriz/friendly-snippets")
+  add("rafamadriz/friendly-snippets")
 end)
 
 -- Honorable mentions =========================================================
@@ -366,40 +367,40 @@ end)
 --
 -- You can use it like so:
 later(function()
-	add("mason-org/mason.nvim")
-	require("mason").setup()
+  add("mason-org/mason.nvim")
+  require("mason").setup()
 end)
 
 now(function()
-	add({ source = "mfussenegger/nvim-lint" })
+  add({ source = "mfussenegger/nvim-lint" })
 
-	local lint = require("lint")
+  local lint = require("lint")
 
-	local eslint = { "eslint_d" }
+  local eslint = { "eslint_d" }
 
-	lint.linters_by_ft = {
-		javascript = eslint,
-		typescript = eslint,
-		javascriptreact = eslint,
-		typescriptreact = eslint,
-		svelte = eslint,
-		-- python = { "pylint" },
-		-- rust = { "ast_grep" },
-		-- c = { "ast_grep" },
-	}
+  lint.linters_by_ft = {
+    javascript = eslint,
+    typescript = eslint,
+    javascriptreact = eslint,
+    typescriptreact = eslint,
+    svelte = eslint,
+    -- python = { "pylint" },
+    -- rust = { "ast_grep" },
+    -- c = { "ast_grep" },
+  }
 
-	local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+  local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
 
-	vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-		group = lint_augroup,
-		callback = function()
-			lint.try_lint()
-		end,
-	})
+  vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+    group = lint_augroup,
+    callback = function()
+      lint.try_lint()
+    end,
+  })
 
-	vim.keymap.set("n", "<leader>ll", function()
-		lint.try_lint()
-	end, { desc = "Trigger linting for current file" })
+  vim.keymap.set("n", "<leader>ll", function()
+    lint.try_lint()
+  end, { desc = "Trigger linting for current file" })
 end)
 
 -- Beautiful, usable, well maintained color schemes outside of 'mini.nvim' and
